@@ -295,31 +295,31 @@ const routes = [
   //   exact: true,
   // },
   // // System Pages
-  // {
-  //   path: '/system/login',
-  //   Component: loadable(() => import('pages/system/login')),
-  //   exact: true,
-  // },
-  // {
-  //   path: '/system/forgot-password',
-  //   Component: loadable(() => import('pages/system/forgot-password')),
-  //   exact: true,
-  // },
-  // {
-  //   path: '/system/register',
-  //   Component: loadable(() => import('pages/system/register')),
-  //   exact: true,
-  // },
-  // {
-  //   path: '/system/lockscreen',
-  //   Component: loadable(() => import('pages/system/lockscreen')),
-  //   exact: true,
-  // },
-  // {
-  //   path: '/system/404',
-  //   Component: loadable(() => import('pages/system/404')),
-  //   exact: true,
-  // },
+  {
+    path: '/system/login',
+    Component: loadable(() => import('pages/system/login')),
+    exact: true,
+  },
+  {
+    path: '/system/forgot-password',
+    Component: loadable(() => import('pages/system/forgot-password')),
+    exact: true,
+  },
+  {
+    path: '/system/register',
+    Component: loadable(() => import('pages/system/register')),
+    exact: true,
+  },
+  {
+    path: '/system/lockscreen',
+    Component: loadable(() => import('pages/system/lockscreen')),
+    exact: true,
+  },
+  {
+    path: '/system/404',
+    Component: loadable(() => import('pages/system/404')),
+    exact: true,
+  },
 ]
 
 const mapStateToProps = ({ settings }) => ({ settings })
