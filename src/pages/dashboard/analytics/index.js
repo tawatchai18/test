@@ -5,9 +5,6 @@ import Chart4 from 'components/widgets/Charts/4'
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { AutoComplete, Button, Icon, Input } from 'antd';
-// import Select from 'react-select';
-
-// const { Option } = Select;
 
 class DashboardAnalytics extends React.Component {
   constructor(props) {
@@ -15,6 +12,7 @@ class DashboardAnalytics extends React.Component {
     this.state = {
       dataSource: [],
       pyramid01: [],
+      user: [],
       hospital: '',
     }
     this.handleValidSubmit = this.handleValidSubmit.bind(this);
@@ -40,6 +38,14 @@ class DashboardAnalytics extends React.Component {
           pyramid01: json
         });
       })
+    // pie อัตราส่วนผู้สูงอายุ
+    fetch(`http://localhost:7000/elderlyrat`)
+      .then(res => res.json())
+      .then(json => {
+        this.setState({
+          user: json
+        });
+      })
   }
 
   onChange() {
@@ -52,19 +58,6 @@ class DashboardAnalytics extends React.Component {
         console.log(json, '====010101');
       })
   }
-
-  // handleSubmit(value) {
-  //     fetch(`http://localhost:7000/pyramid`)
-  //       .then(res => res.json())
-  //       .then(json => {
-  //         this.setState({
-  //           pyramid01: json,
-  //           hospital: value
-  //         });
-  //         console.log(json, '====');
-  //       })
-  //   }
-
 
   handleValidSubmit(value) {
     const { dataSource } = this.state;
@@ -91,14 +84,19 @@ class DashboardAnalytics extends React.Component {
       pyramid01,
       dataSource,
       hospital,
+      user
     } = this.state;
-    // const data = dataSource.map(object => ({
-    //   value: object.name,
-    //   label: object.name,
-    // }));
     const name = dataSource.map(object => object.name);
     const submit = this.handleValidSubmit;
-    // const onSubmit = this.onChange
+    const data1 = user.map(object => ({
+      name: object.name,
+      y: object.peple,
+    }));
+    console.log(data1, 'dataname');
+
+
+
+
     function refreshPage() {
       window.location.reload();
       console.log(refreshPage, 'option');
@@ -134,7 +132,50 @@ class DashboardAnalytics extends React.Component {
           thousandsSep: ','
         }
       });
-      const options1 = {
+
+      const pieChart = {
+        chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: 'pie'
+        },
+        title: {
+          text: 'อัตราส่วนผู้สูงอายุ'
+        },
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+          pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+              enabled: false
+            },
+            showInLegend: true
+          }
+        },
+        series: [{
+          name: 'จำนวน',
+          colorByPoint: true,
+          data: data1
+        }]
+      }
+
+      // const pieChart = {
+      //   xAxis: {
+      //     type: 'category'
+      //   },
+      //   series: [{
+      //     type: 'pie',
+      //     name: 'People',
+      //     data: data1,
+      //     keys: ['name', 'y']
+      //   }],
+      // }
+
+      const optionspyramid = {
         chart: {
           type: 'bar',
           backgroundImage: "url('resources/images/bg_pop.png')"
@@ -171,7 +212,7 @@ class DashboardAnalytics extends React.Component {
           },
           labels: {
             formatter() {
-              return Math.abs(this.value);
+              return Math.abs(this.value)
             }
           },
           // min: -100 *500,
@@ -206,9 +247,7 @@ class DashboardAnalytics extends React.Component {
         <div>
           <div className="row">
             <div className="col-lg-12">
-              {/* {hospital} */}
               <Complete />&nbsp; &nbsp; &nbsp;
-              {/* <Button onClick={onSubmit}>หน่วยงานทั้งหมด</Button> */}
               <Button type="button" onClick={refreshPage}> <span>หน่วยงานทั้งหมด</span> </Button>
             </div>
           </div>
@@ -218,7 +257,7 @@ class DashboardAnalytics extends React.Component {
             <br />
             <div className="card">
               <div className="card-body">
-                <HighchartsReact highcharts={Highcharts} options={options1} style={{ width: "100%", height: "400px" }} />
+                <HighchartsReact highcharts={Highcharts} options={optionspyramid} style={{ width: "100%", height: "400px" }} />
                 <div className="d-flex flex-wrap">
                   <div className="mr-5 mb-2">
                     <div className="text-nowrap text-uppercase text-gray-4">
@@ -234,19 +273,26 @@ class DashboardAnalytics extends React.Component {
                     </div>
                     <div className="font-weight-bold font-size-18 text-dark">{pyramid01.female.toLocaleString()}</div>
                   </div>
-                  <div className="mr-5 mb-2">
+                  {/* <div className="mr-5 mb-2">
                     <div className="text-nowrap text-uppercase text-gray-4">
                       <div className="air__utils__donut air__utils__donut--secondary" />
                       ไม่ระบุเพศ
                     </div>
                     <div className="font-weight-bold font-size-18 text-dark">{pyramid01.undefinedSex.toLocaleString()}</div>
-                  </div>
+                  </div> */}
                   <div className="mr-5 mb-2">
                     <div className="text-nowrap text-uppercase text-gray-4">
                       <div className="air__utils__donut air__utils__donut--success" />
                       ประชากรทั้งหมด
                     </div>
                     <div className="font-weight-bold font-size-18 text-dark">{pyramid01.total.toLocaleString()}</div>
+                  </div>
+                  <div className="mr-5 mb-2">
+                    <div className="text-nowrap text-uppercase text-gray-4">
+                      <div className="air__utils__donut air__utils__donut--success" />
+                      เวลาที่ดึงข้อมูล
+                    </div>
+                    <div className="font-weight-bold font-size-18 text-dark">{pyramid01.date}</div>
                   </div>
                 </div>
               </div>
@@ -259,13 +305,21 @@ class DashboardAnalytics extends React.Component {
             <div className="col-xl-6 col-lg-6">
               {/* <h5 className="text-dark mb-4">อัตราส่วนผู้สูงอายุ</h5> */}
               <div className="card">
-                <Chart6 />
+                <HighchartsReact highcharts={Highcharts} options={pieChart} style={{ width: "100%", height: "400px" }} />
               </div>
             </div>
             <div className="col-xl-6 col-lg-6">
               {/* <h5 className="text-dark mb-4">อัตราส่วนผู้สูงอายุ</h5> */}
               <div className="card">
                 <Chart4 />
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-xl-6 col-lg-6">
+              {/* <h5 className="text-dark mb-4">อัตราส่วนผู้สูงอายุ</h5> */}
+              <div className="card">
+                <Chart6 />
               </div>
             </div>
           </div>

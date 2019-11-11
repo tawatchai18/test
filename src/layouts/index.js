@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { withRouter, Redirect } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import NProgress from 'nprogress'
 import { Helmet } from 'react-helmet'
@@ -67,9 +67,9 @@ class Layout extends React.PureComponent {
         return <Loader />
       }
       // redirect to login page if current is not login page and user not authorized
-      if (!isAuthLayout && !isUserAuthorized) {
-        return <Redirect to="/system/login" />
-      }
+      // if (!isAuthLayout && !isUserAuthorized) {
+      //   return <Redirect to="/system/login" />
+      // }
       // in other case render previously set layout
       return <Container>{children}</Container>
     }

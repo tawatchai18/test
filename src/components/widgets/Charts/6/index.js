@@ -50,7 +50,7 @@ class Chart6 extends Component {
           data: [
             {
               name: "ตาบอด",
-              y: 62.74,
+              y: 90.1,
               drilldown: "ตาบอด"
             },
             {

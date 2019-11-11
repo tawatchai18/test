@@ -15,21 +15,24 @@ class Chart4 extends Component {
   }
 
   componentDidMount() {
-    // fetch(`http://localhost:8081/ratold_pie`)
-    //   .then(res => res.json())
-    //   .then(json => {
-    //     this.setState({
-    //       user: json
-    //     });
-    //   })
+    fetch(`http://localhost:7000/elderlyrat`)
+      .then(res => res.json())
+      .then(json => {
+        this.setState({
+          user: json
+        });
+      })
   }
 
   render() {
     const { user } = this.state;
-    const name = user.map(object => object.name);
-    // const count = user.map(object => object.count);
-
-    console.log(user, name, 'lrjfk');
+    const nameold = user.map(object => object.name);
+    const peple = user.map(object => object.peple);
+    console.log(nameold, peple, 'popop');
+    console.log(user ,'user');
+    
+    
+    
     const options = {
       chart: {
         plotBackgroundColor: null,
@@ -38,7 +41,7 @@ class Chart4 extends Component {
         type: 'pie'
       },
       title: {
-        text: 'อัตราส่วนผู้สูงอายุ'
+        text: 'โรค NCD'
       },
       tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -57,50 +60,17 @@ class Chart4 extends Component {
         name: 'Brands',
         colorByPoint: true,
         data: [{
-          name: 'ติดบ้าน',
-          y: 61.41,
+          name: 'โรคเบาหวาน (Diabetes Mellitus)',y: 61.41,
           sliced: true,
           selected: true
         },
-        { name: 'ติดเตียง', y: 10.85 },
-        { name: 'ติดสังคม', y: 4.67 },
-        { name: 'ยังไม่ประเมิน', y: 4.18 },
+          { name: 'โรคหลอดเลือดสมองและหัวใจ', y: 10.85 },
+          { name: 'โรคถุงลมโป่งพอง', y: 4.67 },
+          { name: 'โรคมะเร็ง (Cancer)', y: 4.18 },
+          { name: 'โรคความดันโลหิตสูง', y: 4.18 },
+          { name: 'โรคอ้วนลงพุง', y: 4.18 },
         ]
       }]
-
-      // chart: {
-      //   plotBackgroundColor: null,
-      //   plotBorderWidth: null,
-      //   plotShadow: false,
-      //   type: 'pie'
-      // },
-      // title: {
-      //   text: 'อัตราส่วนผู้สูงอายุ'
-      // },
-      // tooltip: {
-      //   pointFormat: '{series.name}: <b>{point.percentage:.1f}</b>'
-      // },
-      // plotOptions: {
-      //   pie: {
-      //     allowPointSelect: true,
-      //     cursor: 'pointer',
-      //     dataLabels: {
-      //       enabled: true,
-      //       format: '<b>{point.name}</b>: {point.percentage:.1f} ',
-      //       connectorColor: 'silver'
-      //     }
-      //   }
-      // },
-      // series: [{
-      //   name: 'จำนวน',
-      //   data: [
-      //     // { name: name, y: 61.41 },
-      //     { name: 'ติดบ้าน', y: 11.84 },
-      //     { name: 'ติดเตียง', y: 10.85 },
-      //     { name: 'ติดสังคม', y: 4.67 },
-      //     { name: 'ยังไม่ประเมิน', y: 4.18 },
-      //   ]
-      // }]
     };
 
     return (
