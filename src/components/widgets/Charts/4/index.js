@@ -15,7 +15,7 @@ class Chart4 extends Component {
   }
 
   componentDidMount() {
-    fetch(`http://localhost:7000/elderlyrat`)
+    fetch(`http://localhost:7000/ncd`)
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -26,10 +26,10 @@ class Chart4 extends Component {
 
   render() {
     const { user } = this.state;
-    const nameold = user.map(object => object.name);
-    const peple = user.map(object => object.peple);
-    console.log(nameold, peple, 'popop');
-    console.log(user ,'user');
+    const NCD = user.map(object => ({
+      name: object.name,
+      y: object.peple,
+    }));
     
     
     
@@ -41,7 +41,7 @@ class Chart4 extends Component {
         type: 'pie'
       },
       title: {
-        text: 'โรค NCD'
+        text: 'โรคเรื้อรัง'
       },
       tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -59,17 +59,7 @@ class Chart4 extends Component {
       series: [{
         name: 'Brands',
         colorByPoint: true,
-        data: [{
-          name: 'โรคเบาหวาน (Diabetes Mellitus)',y: 61.41,
-          sliced: true,
-          selected: true
-        },
-          { name: 'โรคหลอดเลือดสมองและหัวใจ', y: 10.85 },
-          { name: 'โรคถุงลมโป่งพอง', y: 4.67 },
-          { name: 'โรคมะเร็ง (Cancer)', y: 4.18 },
-          { name: 'โรคความดันโลหิตสูง', y: 4.18 },
-          { name: 'โรคอ้วนลงพุง', y: 4.18 },
-        ]
+        data: NCD
       }]
     };
 
