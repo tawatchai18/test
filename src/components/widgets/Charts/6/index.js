@@ -51,37 +51,42 @@ class Chart6 extends Component {
             {
               name: "ตาบอด",
               y: 900,
-              drilldown: "ตาบอด"
             },
             {
               name: "หูหนวก",
               y: 1000,
-              drilldown: "หูหนวก"
             },
             {
               name: "ปากแหว่ง",
               y: 767,
-              drilldown: "ปากแหว่ง"
             },
             {
               name: "สมอง",
               y: 558,
-              drilldown: "สมอง"
             },
             {
-              name: "Edge",
+              name: "ขาขาด",
               y: 402,
-              drilldown: "Edge"
             },
             {
-              name: "Opera",
+              name: "ตาดี",
               y: 192,
-              drilldown: "Opera"
+            },
+            {
+              name: "นนนน",
+              y: 192,
+            },
+            {
+              name: "จมูกพัง",
+              y: 192,
+            },
+            {
+              name: "เท้าเปื่อย",
+              y: 192,
             },
             {
               name: "Other",
               y: 762,
-              drilldown: null
             }
           ]
         }
