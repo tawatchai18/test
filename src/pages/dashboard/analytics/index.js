@@ -158,7 +158,7 @@ class DashboardAnalytics extends React.Component {
           },
           colors: ['rgb(144, 237, 125)', 'rgb(247, 163, 92)', '#FF4560', '#333333',],
           title: {
-            text: 'กลุ่มผู้สูงอายุ'
+            text: 'กลุ่มผู้สูงอายุ 60 ปีขึ้นไป'
           },
           tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -174,7 +174,7 @@ class DashboardAnalytics extends React.Component {
             }
           },
           series: [{
-            name: 'Brands',
+            name: 'จำนวน',
             colorByPoint: true,
             data: data1
           }]
@@ -322,7 +322,7 @@ class DashboardAnalytics extends React.Component {
                     }
                     <div className="mr-5 mb-2">
                       <div className="text-nowrap text-uppercase text-gray-4">
-                        <div className="air__utils__donut air__utils__donut--success" />
+                        <div className="air__utils__donut air__utils__donut" style={{borderColor: '#ffff99'}} />
                         รายงานเมื่อ
                       </div>
                       <div className="font-weight-bold font-size-18 text-dark">{pyramid01.date}</div>
@@ -344,16 +344,16 @@ class DashboardAnalytics extends React.Component {
                       <div className="mr-4 mb-2">
                         <div className="text-nowrap text-uppercase text-gray-4">
                           <div className="air__utils__donut air__utils__donut" style={{ borderColor: 'rgb(144, 237, 125)' }} />
-                          ติดบ้าน
+                          ติดสังคม
                         </div>
-                        <div className="font-weight-bold font-size-18 text-dark">{user.MID.toLocaleString()}</div>
+                        <div className="font-weight-bold font-size-18 text-dark">{user.OK.toLocaleString()}</div>
                       </div>
                       <div className="mr-4 mb-2">
                         <div className="text-nowrap text-uppercase text-gray-4">
                           <div className="air__utils__donut air__utils__donut" style={{ borderColor: 'rgb(247, 163, 92)' }} />
-                          ติดสังคม
+                          ติดบ้าน
                         </div>
-                        <div className="font-weight-bold font-size-18 text-dark">{user.OK.toLocaleString()}</div>
+                        <div className="font-weight-bold font-size-18 text-dark">{user.MID.toLocaleString()}</div>
                       </div>
                       {/* {(user.VERYHI !== 0) && ( */}
                       <div className="mr-4 mb-2">
@@ -374,7 +374,7 @@ class DashboardAnalytics extends React.Component {
                       </div>
                       <div className="mr-4 mb-2">
                         <div className="text-nowrap text-uppercase text-gray-4">
-                          <div className="air__utils__donut air__utils__donut" style={{ borderColor: '#333333' }} />
+                          <div className="air__utils__donut air__utils__donut--success" />
                           จำนวนทั้งหมด
                         </div>
                         <div className="font-weight-bold font-size-18 text-dark">{user.total.toLocaleString()}</div>
