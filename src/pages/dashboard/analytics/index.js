@@ -4,7 +4,9 @@ import { Helmet } from 'react-helmet'
 // import Chart4 from 'components/widgets/Charts/4'
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { AutoComplete, Button, Icon, Input } from 'antd';
+import { AutoComplete, Button, Icon, Input, Table, Collapse } from 'antd';
+
+const { Panel } = Collapse;
 
 class DashboardAnalytics extends React.Component {
   constructor(props) {
@@ -24,7 +26,7 @@ class DashboardAnalytics extends React.Component {
   componentDidMount() {
 
     // ชื่อกับ id
-    fetch(`http://localhost:7000/convert`)
+    fetch(`http://localhost:7000/report/convert`)
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -33,7 +35,7 @@ class DashboardAnalytics extends React.Component {
       })
 
     // กราฟ ปิรามิด
-    fetch(`http://localhost:7000/pyramid`)
+    fetch(`http://localhost:7000/report/pyramid`)
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -49,7 +51,7 @@ class DashboardAnalytics extends React.Component {
         }
       )
     // pie อัตราส่วนผู้สูงอายุ
-    fetch(`http://localhost:7000/elderlyrat`)
+    fetch(`http://localhost:7000/report/elderlyrat`)
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -59,7 +61,7 @@ class DashboardAnalytics extends React.Component {
       })
 
     // piechart โรคเรื้อรัง
-    fetch(`http://localhost:7000/chronic`)
+    fetch(`http://localhost:7000/report/chronic`)
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -77,7 +79,7 @@ class DashboardAnalytics extends React.Component {
     if (organization !== undefined) {
       const idOption = organization.id
       console.log(idOption, 'ooooo');
-      fetch(`http://localhost:7000/pyramid/${idOption}`)
+      fetch(`http://localhost:7000/report/pyramid/${idOption}`)
         .then(res => res.json())
         .then(json => {
           this.setState({
@@ -87,7 +89,7 @@ class DashboardAnalytics extends React.Component {
           console.log(json, '====');
         })
 
-      fetch(`http://localhost:7000/elderlyrat/${idOption}`)
+      fetch(`http://localhost:7000/report/elderlyrat/${idOption}`)
         .then(res => res.json())
         .then(json => {
           this.setState({
@@ -96,7 +98,7 @@ class DashboardAnalytics extends React.Component {
           });
         })
 
-      fetch(`http://localhost:7000/chronic/${idOption}`)
+      fetch(`http://localhost:7000/report/chronic/${idOption}`)
         .then(res => res.json())
         .then(json => {
           this.setState({
@@ -130,6 +132,11 @@ class DashboardAnalytics extends React.Component {
     } if (!isLoaded) {
       return <div>Loading...</div>;
     }
+
+    function callback(key) {
+      console.log(key);
+    }
+
     function Complete() {
       return (
         <AutoComplete
@@ -151,15 +158,33 @@ class DashboardAnalytics extends React.Component {
     const myArrStr = pyramid01.byAge;
     const active = user.byActive;
     const piechronic = chronic.byIcd10
-    // const name1 = chronic.byIcd10[0].name
-    // console.log(name1,'4544664');
 
     if (piechronic !== undefined) {
+      piechronic.map(item => (
+        console.log(item.y, 'popiij')
+      ));
+
       const chronicpiechart = piechronic.map(object => ({
         name: object.name,
         y: object.y,
       }));
-    
+      const columns = [
+        // {
+        //   title: "ลำดับ",
+        //   dataIndex: 'key'
+        // },
+        {
+          title: 'ชื่อ',
+          dataIndex: 'name',
+          key: '1',
+        },
+        {
+          title: 'จำนวน',
+          dataIndex: 'y',
+          key: '1',
+        },
+      ];
+
       if (active !== undefined) {
         const data1 = active.map(object => ({
           name: object.name,
@@ -189,7 +214,7 @@ class DashboardAnalytics extends React.Component {
             },
             colors: ['#008FFB', '#FF4560'],
             title: {
-              text: 'ปิรามิดประชากร',
+              text: hospital !== '' ? `ปิรามิดประชากร</b></b></br><br/>${hospital}` : 'ปิรามิดหน่วยงานทั้งหมด',
             },
             subtitle: {
               text: null
@@ -259,7 +284,8 @@ class DashboardAnalytics extends React.Component {
             },
             colors: ['rgb(144, 237, 125)', 'rgb(247, 163, 92)', '#FF4560', '#333333',],
             title: {
-              text: 'กลุ่มผู้สูงอายุ 60 ปีขึ้นไป'
+              // text: `กลุ่มผู้สูงอายุ 60 ปีขึ้นไป</b></br><br/>${hospital}`
+              text: hospital !== '' ? `กลุ่มผู้สูงอายุ 60 ปีขึ้นไป</b></br><br/>${hospital}` : 'กลุ่มผู้สูงอายุ 60 ปีขึ้นไป</br></br>หน่วยงานทั้งหมด',
             },
             tooltip: {
               pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -291,9 +317,10 @@ class DashboardAnalytics extends React.Component {
             credits: {
               enabled: false
             },
-            colors: ['rgb(144, 237, 125)', 'rgb(247, 163, 92)', '#FF4560', '#333333',],
+            colors: ['rgb(144, 237, 125)', 'rgb(247, 163, 92)', '#FF4560', '#333333', '#008FFB'],
             title: {
-              text: 'กลุ่มผู้สูงอายุ'
+              // text: `ผู้ป่วยโรคเรื้อรัง</br></b><br/>${hospital}`
+              text: hospital !== '' ? `ผู้ป่วยโรคเรื้อรัง</b></br><br/>${hospital}` : 'ผู้ป่วยโรคเรื้อรังทั้งหมด',
             },
             tooltip: {
               pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -314,41 +341,6 @@ class DashboardAnalytics extends React.Component {
               data: chronicpiechart
             }]
           }
-
-          // piechart ผู้ป่วยโรคเรื้อรัง
-          // const pieChartchronics = {
-          //   chart: {
-          //     plotBackgroundColor: null,
-          //     plotBorderWidth: null,
-          //     plotShadow: false,
-          //     type: 'pie'
-          //   },
-          //   credits: {
-          //     enabled: false
-          //   },
-          //   // colors: ['rgb(144, 237, 125)', 'rgb(247, 163, 92)', '#FF4560', '#333333',],
-          //   title: {
-          //     text: 'กลุ่มผู้ป่วยโรคเรื้อรัง'
-          //   },
-          //   tooltip: {
-          //     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-          //   },
-          //   plotOptions: {
-          //     pie: {
-          //       allowPointSelect: true,
-          //       cursor: 'pointer',
-          //       dataLabels: {
-          //         enabled: true,
-          //         format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-          //       }
-          //     }
-          //   },
-          //   series: [{
-          //     name: 'จำนวน',
-          //     colorByPoint: true,
-          //     data: chronicpiechart
-          //   }]
-          // }
 
           return (
             <div>
@@ -380,16 +372,16 @@ class DashboardAnalytics extends React.Component {
                         </div>
                         <div className="font-weight-bold font-size-18 text-dark">{pyramid01.female.toLocaleString()}</div>
                       </div>
-                      {(pyramid01.total !== 0) && (
-                        <div className="mr-5 mb-2">
-                          <div className="text-nowrap text-uppercase text-gray-4">
-                            <div className="air__utils__donut air__utils__donut--success" />
-                            ประชากรทั้งหมด
-                          </div>
-                          <div className="font-weight-bold font-size-18 text-dark">{pyramid01.total.toLocaleString()}</div>
+                      {/* {(pyramid01.total !== 0) && ( */}
+                      <div className="mr-5 mb-2">
+                        <div className="text-nowrap text-uppercase text-gray-4">
+                          <div className="air__utils__donut air__utils__donut--success" />
+                          ประชากรทั้งหมด
                         </div>
-                      )
-                      }
+                        <div className="font-weight-bold font-size-18 text-dark">{pyramid01.total.toLocaleString()}</div>
+                      </div>
+                      {/* ) */}
+                      {/* } */}
                       <div className="mr-5 mb-2">
                         <div className="text-nowrap text-uppercase text-gray-4">
                           <div className="air__utils__donut air__utils__donut" style={{ borderColor: '#ffff99' }} />
@@ -407,83 +399,15 @@ class DashboardAnalytics extends React.Component {
                   <div className="card">
                     <div className="card-body">
                       <HighchartsReact highcharts={Highcharts} options={pieChartchronics} style={{ width: "100%", height: "400px" }} />
-                      <div>
-                        <div className="mb-3">
-                          <div className="table-responsive">
-                            <table className="table table-borderless text-gray-6 mb-0">
-                              <tbody>
-                                <tr>
-                                  <td className="text-nowrap">
-                                    <div className="air__utils__donut air__utils__donut--danger mr-3" />
-                                    {chronic.byIcd10[0].name}
-                                  </td>
-                                  <td className="text-right">
-                                    <strong>{chronic.byIcd10[0].y.toLocaleString()}</strong>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td className="text-nowrap">
-                                    <div className="air__utils__donut air__utils__donut--primary mr-3" />
-                                    {chronic.byIcd10[1].name}
-                                  </td>
-                                  <td className="text-right">
-                                    <strong>{chronic.byIcd10[1].y.toLocaleString()}</strong>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td className="text-nowrap">
-                                    <div className="air__utils__donut air__utils__donut--success mr-3" />
-                                    {chronic.byIcd10[2].name}
-                                  </td>
-                                  <td className="text-right">
-                                    <strong>{chronic.byIcd10[2].y.toLocaleString()}</strong>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td className="text-nowrap">
-                                    <div className="air__utils__donut air__utils__donut--info mr-3" />
-                                    {chronic.byIcd10[3].name}
-                                  </td>
-                                  <td className="text-right">
-                                    <strong>{chronic.byIcd10[3].y.toLocaleString()}</strong>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td className="text-nowrap">
-                                    <div className="air__utils__donut air__utils__donut--orange mr-3" />
-                                    {chronic.byIcd10[4].name}
-                                  </td>
-                                  <td className="text-right">
-                                    <strong>{chronic.byIcd10[4].y.toLocaleString()}</strong>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td className="text-nowrap">
-                                    <div className="air__utils__donut air__utils__donut--orange mr-3" />
-                                    อื่นๆ
-                                  </td>
-                                  <td className="text-right">
-                                    <strong>{chronic.other}</strong>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td className="text-nowrap">
-                                    <div className="air__utils__donut air__utils__donut--orange mr-3" />
-                                    จำนวนทั้งหมด
-                                  </td>
-                                  <td className="text-right">
-                                    <strong>{chronic.total}</strong>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
+                      <Collapse onChange={callback}>
+                        <Panel header="จำนวนผู้ป่วยโรคเรื้อรัง (กดดูรายละเอียด)" key="1">
+                          <Table dataSource={chronicpiechart} columns={columns} bordered />
+                        </Panel>
+                      </Collapse>
                     </div>
                   </div>
                 </div>
-                <div className="col-xl-6 col-lg-6">
+                <div className="col-xl-5 col-lg-5">
                   <div className="card">
                     <div className="card-body">
                       <HighchartsReact highcharts={Highcharts} options={pieChartelderly} style={{ width: "100%", height: "400px" }} />
@@ -502,7 +426,6 @@ class DashboardAnalytics extends React.Component {
                           </div>
                           <div className="font-weight-bold font-size-18 text-dark">{user.MID.toLocaleString()}</div>
                         </div>
-                        {/* {(user.VERYHI !== 0) && ( */}
                         <div className="mr-4 mb-2">
                           <div className="text-nowrap text-uppercase text-gray-4">
                             <div className="air__utils__donut air__utils__donut" style={{ borderColor: '#FF4560' }} />
@@ -510,8 +433,6 @@ class DashboardAnalytics extends React.Component {
                           </div>
                           <div className="font-weight-bold font-size-18 text-dark">{user.VERYHI.toLocaleString()}</div>
                         </div>
-                        {/* )
-                      } */}
                         <div className="mr-4 mb-2">
                           <div className="text-nowrap text-uppercase text-gray-4">
                             <div className="air__utils__donut air__utils__donut" style={{ borderColor: '#333333' }} />
@@ -519,13 +440,13 @@ class DashboardAnalytics extends React.Component {
                           </div>
                           <div className="font-weight-bold font-size-18 text-dark">{user.UNKNOWN.toLocaleString()}</div>
                         </div>
-                        <div className="mr-4 mb-2">
+                        {/* <div className="mr-4 mb-2">
                           <div className="text-nowrap text-uppercase text-gray-4">
                             <div className="air__utils__donut air__utils__donut--success" />
                             จำนวนทั้งหมด
                           </div>
                           <div className="font-weight-bold font-size-18 text-dark">{user.total.toLocaleString()}</div>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
