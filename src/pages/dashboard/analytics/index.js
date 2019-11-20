@@ -2,6 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 // import Chart6 from 'components/widgets/Charts/6'
 // import Chart4 from 'components/widgets/Charts/4'
+import moment from 'moment-timezone'
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { AutoComplete, Button, Icon, Input, Table, Collapse } from 'antd';
@@ -51,7 +52,7 @@ class DashboardAnalytics extends React.Component {
         }
       )
     // pie อัตราส่วนผู้สูงอายุ
-    fetch(`http://localhost:7000/report/elderlyrat`)
+    fetch(`https://report-api.ffc.in.th/report/elderlyrat`)
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -61,7 +62,7 @@ class DashboardAnalytics extends React.Component {
       })
 
     // piechart โรคเรื้อรัง
-    fetch(`http://localhost:7000/report/chronic`)
+    fetch(`https://report-api.ffc.in.th/report/chronic`)
       .then(res => res.json())
       .then(json => {
         this.setState({
@@ -89,7 +90,7 @@ class DashboardAnalytics extends React.Component {
           console.log(json, '====');
         })
 
-      fetch(`http://localhost:7000/report/elderlyrat/${idOption}`)
+      fetch(`https://report-api.ffc.in.th/report/elderlyrat/${idOption}`)
         .then(res => res.json())
         .then(json => {
           this.setState({
@@ -98,7 +99,7 @@ class DashboardAnalytics extends React.Component {
           });
         })
 
-      fetch(`http://localhost:7000/report/chronic/${idOption}`)
+      fetch(`https://report-api.ffc.in.th/report/chronic/${idOption}`)
         .then(res => res.json())
         .then(json => {
           this.setState({
@@ -190,12 +191,12 @@ class DashboardAnalytics extends React.Component {
           name: object.name,
           y: object.peple,
         }));
-        console.log(data1, 'dlfkfjkfjf');
 
         if (myArrStr !== undefined) {
           const age = myArrStr.map(item => { return item.age })
           const female = myArrStr.map(item => { return item.female })
           const male = myArrStr.map(item => -Math.abs((item.male)))
+          const date = moment(pyramid01.date).tz('Asia/Bangkok')
 
           Highcharts.setOptions({
             lang: {
@@ -284,7 +285,6 @@ class DashboardAnalytics extends React.Component {
             },
             colors: ['rgb(144, 237, 125)', 'rgb(247, 163, 92)', '#FF4560', '#333333',],
             title: {
-              // text: `กลุ่มผู้สูงอายุ 60 ปีขึ้นไป</b></br><br/>${hospital}`
               text: hospital !== '' ? `กลุ่มผู้สูงอายุ 60 ปีขึ้นไป</b></br><br/>${hospital}` : 'กลุ่มผู้สูงอายุ 60 ปีขึ้นไป</br></br>หน่วยงานทั้งหมด',
             },
             tooltip: {
@@ -387,7 +387,7 @@ class DashboardAnalytics extends React.Component {
                           <div className="air__utils__donut air__utils__donut" style={{ borderColor: '#ffff99' }} />
                           รายงานเมื่อ
                         </div>
-                        <div className="font-weight-bold font-size-18 text-dark">{pyramid01.date}</div>
+                        <div className="font-weight-bold font-size-18 text-dark">{date.format('DD MMMM YYYY HH:mm:ss')}</div>
                       </div>
                     </div>
                   </div>

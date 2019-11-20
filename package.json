@@ -43,6 +43,7 @@
     "highcharts-react-official": "^2.2.2",
     "history": "^4.9.0",
     "lodash": "^4.17.11",
+    "moment-timezone": "^0.5.27",
     "nprogress": "^0.2.0",
     "qs": "^6.7.0",
     "react": "^16.8.6",
