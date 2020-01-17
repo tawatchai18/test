@@ -19,7 +19,7 @@ const initialState = {
     isMenuCollapsed: false,
     isMenuShadow: false,
     isMenuUnfixed: false,
-    menuLayoutType: 'left', // left, top, nomenu
+    menuLayoutType: 'top', // left, top, nomenu
     menuType: 'default', // default, flyout, compact
     menuColor: 'gray', // dark, blue, gray, white
     flyoutMenuColor: 'dark', // dark, blue, gray, white

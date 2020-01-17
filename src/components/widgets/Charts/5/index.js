@@ -1,83 +1,64 @@
-
-import React, { Component } from "react";
-import Highcharts from "highcharts";
+import React from 'react'
+// import { Helmet } from 'react-helmet'
+// import Highcharts from "highcharts";
 // import HighchartsReact from "highcharts-react-official";
+// import drilldow from "highcharts/modules/drilldown";
+import { Table } from 'antd'
 
-import PieChart from "highcharts-react-official";
-
-class Chart5 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: [],
-
-    }
-  }
-
+class Chart5 extends React.Component {
   componentDidMount() {
-    fetch(`http://localhost:8081/ratold_pie`)
-      .then(res => res.json())
-      .then(json => {
-        this.setState({
-          user: json
-        });
-      })
+
   }
 
   render() {
-    const { user } = this.state;
-    const name = user.map(object => object.name);
-    // const count = user.map(object => object.count);
+    const columns = [
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        render: text => <a>{text}</a>,
+      },
+      {
+        title: 'Cash Assets',
+        className: 'column-money',
+        dataIndex: 'money',
+      },
+      {
+        title: 'Address',
+        dataIndex: 'address',
+      },
+    ];
 
-    console.log(user, name, 'lrjfk');
-    const options = {
-      chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
+    const data = [
+      {
+        key: '1',
+        name: 'John Brown',
+        money: '￥300,000.00',
+        address: 'New York No. 1 Lake Park',
       },
-      title: {
-        text: 'รายงานสะสมโรค NCD'
+      {
+        key: '2',
+        name: 'Jim Green',
+        money: '￥1,256,000.00',
+        address: 'London No. 1 Lake Park',
       },
-      tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      {
+        key: '3',
+        name: 'Joe Black',
+        money: '￥120,000.00',
+        address: 'Sidney No. 1 Lake Park',
       },
-      plotOptions: {
-        pie: {
-          allowPointSelect: true,
-          cursor: 'pointer',
-          dataLabels: {
-            enabled: false
-          },
-          showInLegend: true
-        }
-      },
-      series: [{
-        name: 'Brands',
-        colorByPoint: true,
-        data: [{
-          name: 'โรคเบาหวาน',
-          y: 31.41,
-          sliced: true,
-          selected: true
-        },
-        { name: 'โรคหลอดเลือดสมองและหัวใจ', y: 10.85 },
-        { name: 'โรคถุงลมโป่งพอง', y: 4.67 },
-        { name: 'โรคมะเร็ง', y: 15.18 },
-        { name: 'โรคความดันโลหิตสูง', y: 8.18 },
-        { name: 'โรคความอ้วนลงพุง', y: 10.18 },
-        ]
-      }]
-    };
-
+    ];
     return (
       <div>
-        <center>
-          <PieChart highcharts={Highcharts} options={options} />
-        </center>
+        <div className="col-xl-12">
+          <Table
+            columns={columns}
+            dataSource={data}
+            bordered
+          />
+        </div>
       </div>
-    );
+    )
   }
 }
 

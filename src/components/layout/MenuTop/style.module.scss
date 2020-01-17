@@ -57,11 +57,13 @@
   &__container {
     padding-top: rem(15);
     padding-bottom: rem(15);
+    padding-left: 42rem;
 
     @media (max-width: $sm-max-width) {
       overflow: auto;
       padding-top: 0;
       padding-bottom: rem(20);
+      padding: 0rem;
     }
   }
 
@@ -144,13 +146,13 @@
   //logo
   &__logo {
     display: block;
-    padding: rem(15) rem(20);
+    padding: rem(15) rem(100);
     line-height: 1;
     height: rem(64);
-    min-width: rem(200);
+    min-width: rem(0);
     img {
       float: left;
-      margin-top: rem(5);
+      margin-top: rem(-20);
     }
     &__name {
       font-weight: 900;

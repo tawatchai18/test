@@ -4,7 +4,7 @@ class Search extends React.Component {
   render() {
     return (
       <div>
-        <img src="resources/images/LOGO_Color.png" alt="..." style={{ width: 100, height: 70 }} />
+        <img src="resources/images/LOGO_Color.png" alt="..." style={{ width: 82, height: 82 }} />
       </div>
     )
   }

@@ -7,8 +7,8 @@ module.exports = {
   '@font-size-sm': '13px',
   '@font-size-lg': '17px',
 
-  '@font-family': 'Source Sans Pro, sans-serif',
-  '@code-family': 'Source Sans Pro, sans-serif',
+  '@font-family': 'kanit, sans-serif',
+  '@code-family': 'kanit, sans-serif',
 
   '@border-color-base': '#e4e9f0',
 

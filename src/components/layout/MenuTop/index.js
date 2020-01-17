@@ -122,7 +122,7 @@ class MenuTop extends React.Component {
 
   renderFlyoutMenu = (items, key, itemDimensions) => {
     const { settings } = this.props
-    const { activeItem } = this.state
+    // const { activeItem } = this.state
     const left = `${itemDimensions.left + itemDimensions.width / 2}px`
     const top = `${itemDimensions.top + itemDimensions.height}px`
 
@@ -145,9 +145,7 @@ class MenuTop extends React.Component {
           {items.map(item => {
             return (
               <li
-                className={classNames(style.air__menuTop__item, {
-                  [style.air__menuTop__item__active]: activeItem === item.key,
-                })}
+                className={classNames(style.air__menuTop__item)}
                 key={item.key}
               >
                 <Link to={item.url} className={style.air__menuTop__link}>
@@ -188,7 +186,7 @@ class MenuTop extends React.Component {
       return key
     })
     this.setState({
-      activeItem: activeItem.key,
+      // activeItem: activeItem.key,
       activeSubmenu: activeSubmenu.key,
     })
   }
@@ -273,7 +271,7 @@ class MenuTop extends React.Component {
   render() {
     const { settings } = this.props
     const { renderedFlyoutItems } = this.state
-    const items = this.generateMenuItems()
+    // const items = this.generateMenuItems()
     return (
       <div>
         <TransitionGroup>
@@ -306,35 +304,62 @@ class MenuTop extends React.Component {
             >
               <span />
             </a>
-            <a href="javascript: void(0);" className={style.air__menuTop__logo}>
-              <img src="resources/images/air-logo.png" alt="Air UI" />
-              <div className={style.air__menuTop__logo__name}>AIR UI</div>
-              <div className={style.air__menuTop__logo__descr}>Admin Template</div>
+            <a href="https://www.ffc.in.th">
+              <img src="resources/images/LOGO_Color.png" alt="..." style={{ width: 82, height: 82 }} />
             </a>
             <div id="menu-left-container" className={style.air__menuTop__container}>
               <ul className={style.air__menuTop__list}>
                 <li className={style.air__menuTop__item}>
                   <a
-                    href="javascript: void(0);"
-                    className={style.air__menuTop__link}
-                    onClick={this.toggleSettings}
-                  >
-                    <i className={`fe fe-settings ${style.air__menuTop__icon}`} />
-                    <span>Settings</span>
-                  </a>
-                </li>
-                <li className={style.air__menuTop__item}>
-                  <a
-                    href="https://docs.airuitemplate.com/"
+                    href="https://www.ffc.in.th/"
                     className={style.air__menuTop__link}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i className={`fe fe-compass ${style.air__menuTop__icon}`} />
-                    <span>Documentation</span>
+                    <span>Home</span>
                   </a>
                 </li>
-                {items}
+                <li className={style.air__menuTop__item}>
+                  <a
+                    href="https://ffc.in.th/dashboard/#/dashboard/analytics"
+                    className={style.air__menuTop__link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>Dashboard</span>
+                  </a>
+                </li>
+                <li className={style.air__menuTop__item}>
+                  <a
+                    href="https://download.ffc.in.th/"
+                    className={style.air__menuTop__link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>Download</span>
+                  </a>
+                </li>
+                <li className={style.air__menuTop__item}>
+                  <a
+                    href="https://www.ffc.in.th/blog/"
+                    className={style.air__menuTop__link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>Blog</span>
+                  </a>
+                </li>
+                <li className={style.air__menuTop__item}>
+                  <a
+                    href="https://www.ffc.in.th/contact/"
+                    className={style.air__menuTop__link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>Contact</span>
+                  </a>
+                </li>
+                {/* {items} */}
               </ul>
             </div>
           </div>

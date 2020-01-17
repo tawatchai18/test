@@ -44,27 +44,27 @@ class ProfileMenu extends React.Component {
       <Menu onClick={this.handleClick} selectedKeys={[this.state.current]} mode="horizontal">
         <Menu.Item key="">
           <a href="https://www.ffc.in.th/" target="_blank" rel="noopener noreferrer">
-            HOME
+            Home
+          </a>
+        </Menu.Item>
+        <Menu.Item key="">
+          <a href="https://ffc.in.th/dashboard/#/dashboard/analytics" target="_blank" rel="noopener noreferrer">
+            Dashboard
           </a>
         </Menu.Item>
         <Menu.Item key="">
           <a href="https://download.ffc.in.th/" target="_blank" rel="noopener noreferrer">
-            DOWNLOAD
+            Download
           </a>
         </Menu.Item>
         <Menu.Item key="">
           <a href="https://www.ffc.in.th/blog/" target="_blank" rel="noopener noreferrer">
-            FAQ
+            blog
           </a>
         </Menu.Item>
         <Menu.Item key="">
           <a href="https://www.ffc.in.th/contact/" target="_blank" rel="noopener noreferrer">
-            CONTACT
-          </a>
-        </Menu.Item>
-        <Menu.Item key="">
-          <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
-            REPORT
+            Contact
           </a>
         </Menu.Item>
       </Menu>

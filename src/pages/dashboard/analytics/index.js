@@ -1,13 +1,16 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-// import Chart6 from 'components/widgets/Charts/6'
-// import Chart4 from 'components/widgets/Charts/4'
-import moment from 'moment-timezone'
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-import { AutoComplete, Button, Icon, Input, Table, Collapse } from 'antd';
+import Chart1 from 'components/widgets/Charts/1'
+import { AutoComplete, Button, Icon, Input, Tabs } from 'antd';
+import Chart2 from 'components/widgets/Charts/2';
+import Chart3 from 'components/widgets/Charts/3';
+import Chart4 from 'components/widgets/Charts/4';
+// import Chart5 from 'components/widgets/Charts/5';
+import General2 from 'components/widgets/General/2'
+import General3 from 'components/widgets/General/3'
+// import moment from 'moment-timezone'
 
-const { Panel } = Collapse;
+const { TabPane } = Tabs
 
 class DashboardAnalytics extends React.Component {
   constructor(props) {
@@ -15,8 +18,10 @@ class DashboardAnalytics extends React.Component {
     this.state = {
       dataSource: [],
       pyramid01: [],
-      user: [],
+      pyramid60up: [],
       chronic: [],
+      chronicdilldown: [],
+      user: [],
       hospital: '',
       isLoaded: false,
       error: null,
@@ -25,7 +30,6 @@ class DashboardAnalytics extends React.Component {
   }
 
   componentDidMount() {
-
     // ชื่อกับ id
     fetch(`http://localhost:7000/report/convert`)
       .then(res => res.json())
@@ -51,25 +55,73 @@ class DashboardAnalytics extends React.Component {
           });
         }
       )
+
+    fetch(`http://localhost:7000/report/pyramid60up`)
+      .then(res => res.json())
+      .then(json => {
+        this.setState({
+          pyramid60up: json,
+          isLoaded: true,
+        });
+      },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+
     // pie อัตราส่วนผู้สูงอายุ
-    fetch(`https://report-api.ffc.in.th/report/elderlyrat`)
+    fetch(`http://localhost:7000/report/elderlyrat`)
       .then(res => res.json())
       .then(json => {
         this.setState({
           user: json,
           isLoaded: true
         });
-      })
+      },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
 
     // piechart โรคเรื้อรัง
-    fetch(`https://report-api.ffc.in.th/report/chronic`)
+    fetch(`http://localhost:7000/report/chronic`)
       .then(res => res.json())
       .then(json => {
         this.setState({
           chronic: json,
           isLoaded: true
         });
-      })
+      },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+
+    // piechronicdilldown โรคเรื้อรัง
+    fetch(`http://localhost:7000/report/chronicdilldown`)
+      .then(res => res.json())
+      .then(json => {
+        this.setState({
+          chronicdilldown: json,
+          isLoaded: true
+        });
+      },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
   }
 
   handleValidSubmit(value) {
@@ -79,7 +131,7 @@ class DashboardAnalytics extends React.Component {
     })
     if (organization !== undefined) {
       const idOption = organization.id
-      console.log(idOption, 'ooooo');
+
       fetch(`http://localhost:7000/report/pyramid/${idOption}`)
         .then(res => res.json())
         .then(json => {
@@ -87,10 +139,18 @@ class DashboardAnalytics extends React.Component {
             pyramid01: json,
             hospital: value
           });
-          console.log(json, '====');
         })
 
-      fetch(`https://report-api.ffc.in.th/report/elderlyrat/${idOption}`)
+      fetch(`http://localhost:7000/report/pyramid60up/${idOption}`)
+        .then(res => res.json())
+        .then(json => {
+          this.setState({
+            pyramid60up: json,
+            hospital: value
+          });
+        })
+
+      fetch(`http://localhost:7000/report/elderlyrat/${idOption}`)
         .then(res => res.json())
         .then(json => {
           this.setState({
@@ -99,7 +159,7 @@ class DashboardAnalytics extends React.Component {
           });
         })
 
-      fetch(`https://report-api.ffc.in.th/report/chronic/${idOption}`)
+      fetch(`http://localhost:7000/report/chronic/${idOption}`)
         .then(res => res.json())
         .then(json => {
           this.setState({
@@ -107,41 +167,28 @@ class DashboardAnalytics extends React.Component {
             hospital: value
           });
         })
+
+      fetch(`http://localhost:7000/report/chronicdilldown/${idOption}`)
+        .then(res => res.json())
+        .then(json => {
+          this.setState({
+            chronicdilldown: json,
+            hospital: value
+          });
+        })
     }
   }
 
   render() {
-    const {
-      pyramid01,
-      dataSource,
-      chronic,
-      hospital,
-      user,
-      isLoaded,
-      error
-    } = this.state;
-    console.log(chronic, 'chronic');
+    const { dataSource, chronic, pyramid01, pyramid60up, user, hospital, isLoaded, chronicdilldown, error } = this.state;
     const name = dataSource.map(object => object.name);
+    const oo = name.length
     const submit = this.handleValidSubmit;
-    function refreshPage() {
-      window.location.reload();
-      console.log(refreshPage, 'option');
-
-    }
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    } if (!isLoaded) {
-      return <div>Loading...</div>;
-    }
-
-    function callback(key) {
-      console.log(key);
-    }
 
     function Complete() {
       return (
         <AutoComplete
-          style={{ width: 400, Color: '#000' }}
+          style={{ width: 350, Color: '#000' }}
           onChange={submit}
           dataSource={name}
           defaultValue={hospital}
@@ -155,312 +202,93 @@ class DashboardAnalytics extends React.Component {
       );
     }
 
-    // กราฟ ปิรามิด
-    const myArrStr = pyramid01.byAge;
-    const active = user.byActive;
-    const piechronic = chronic.byIcd10
+    function refreshPage() {
+      window.location.reload();
 
-    if (piechronic !== undefined) {
-      piechronic.map(item => (
-        console.log(item.y, 'popiij')
-      ));
-
-      const chronicpiechart = piechronic.map(object => ({
-        name: object.name,
-        y: object.y,
-      }));
-      const columns = [
-        // {
-        //   title: "ลำดับ",
-        //   dataIndex: 'key'
-        // },
-        {
-          title: 'ชื่อ',
-          dataIndex: 'name',
-          key: '1',
-        },
-        {
-          title: 'จำนวน',
-          dataIndex: 'y',
-          key: '1',
-        },
-      ];
-
-      if (active !== undefined) {
-        const data1 = active.map(object => ({
-          name: object.name,
-          y: object.peple,
-        }));
-
-        if (myArrStr !== undefined) {
-          const age = myArrStr.map(item => { return item.age })
-          const female = myArrStr.map(item => { return item.female })
-          const male = myArrStr.map(item => -Math.abs((item.male)))
-          const date = moment(pyramid01.date).tz('Asia/Bangkok')
-
-          Highcharts.setOptions({
-            lang: {
-              thousandsSep: ','
-            }
-          });
-
-          // ปิรามิดประชากร ทั้งหมด
-          const optionspyramid = {
-            chart: {
-              type: 'bar',
-              // plotBackgroundImage: 'resources/images/bg_pop.png'
-            },
-            credits: {
-              enabled: false
-            },
-            colors: ['#008FFB', '#FF4560'],
-            title: {
-              text: hospital !== '' ? `ปิรามิดประชากร</b></b></br><br/>${hospital}` : 'ปิรามิดหน่วยงานทั้งหมด',
-            },
-            subtitle: {
-              text: null
-            },
-            xAxis: [{
-              categories: age,
-              reversed: false,
-              labels: {
-                step: 1
-              }
-            }, { // อายุอีกฝั่ง
-              opposite: true,
-              reversed: false,
-              categories: age,
-
-              linkedTo: 0,
-              labels: {
-                step: 1
-              }
-            }],
-            yAxis: {
-              title: {
-                text: null
-              },
-              labels: {
-                formatter() {
-                  return Math.abs(this.value)
-                }
-              }
-            },
-            plotOptions: {
-              series: {
-                stacking: 'normal',
-              }
-            },
-            lang: {
-              thousandsSep: ','
-            },
-            tooltip: {
-              formatter() {
-                return `<b>${this.series.name}, ช่วงอายุ ${this.point.category}</b><br/>` +
-                  `จำนวน:${Highcharts.numberFormat(Math.abs(this.point.y), 0)}`;
-              }
-            },
-            series: [
-              {
-                name: "ชาย",
-                data: male,
-              },
-              {
-                name: "หญิง",
-                data: female
-              }
-            ]
-          }
-
-          // piechart ผู้สูงอายุ 60 ปีขึ้นไป
-          const pieChartelderly = {
-            chart: {
-              plotBackgroundColor: null,
-              plotBorderWidth: null,
-              plotShadow: false,
-              type: 'pie'
-            },
-            credits: {
-              enabled: false
-            },
-            colors: ['rgb(144, 237, 125)', 'rgb(247, 163, 92)', '#FF4560', '#333333',],
-            title: {
-              text: hospital !== '' ? `กลุ่มผู้สูงอายุ 60 ปีขึ้นไป</b></br><br/>${hospital}` : 'กลุ่มผู้สูงอายุ 60 ปีขึ้นไป</br></br>หน่วยงานทั้งหมด',
-            },
-            tooltip: {
-              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            plotOptions: {
-              pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                  enabled: true,
-                  format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                }
-              }
-            },
-            series: [{
-              name: 'จำนวน',
-              colorByPoint: true,
-              data: data1
-            }]
-          }
-
-          const pieChartchronics = {
-            chart: {
-              plotBackgroundColor: null,
-              plotBorderWidth: null,
-              plotShadow: false,
-              type: 'pie'
-            },
-            credits: {
-              enabled: false
-            },
-            colors: ['rgb(144, 237, 125)', 'rgb(247, 163, 92)', '#FF4560', '#333333', '#008FFB'],
-            title: {
-              // text: `ผู้ป่วยโรคเรื้อรัง</br></b><br/>${hospital}`
-              text: hospital !== '' ? `ผู้ป่วยโรคเรื้อรัง</b></br><br/>${hospital}` : 'ผู้ป่วยโรคเรื้อรังทั้งหมด',
-            },
-            tooltip: {
-              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            plotOptions: {
-              pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                  enabled: false
-                },
-                // showInLegend: true
-              }
-            },
-            series: [{
-              name: 'จำนวน',
-              colorByPoint: true,
-              data: chronicpiechart
-            }]
-          }
-
-          return (
-            <div>
-              <div className="row">
-                <div className="col-lg-12">
-                  <Complete />&nbsp; &nbsp; &nbsp;
-                  <Button type="button" onClick={refreshPage}> <span>หน่วยงานทั้งหมด</span> </Button>
-                </div>
-              </div>
-              <div className="col-xl-12">
-                <br />
-                <br />
-                <br />
-                <div className="card">
-                  <div className="card-body">
-                    <HighchartsReact highcharts={Highcharts} options={optionspyramid} loading={isLoaded} style={{ width: "100%", height: "400px" }} />
-                    <div className="d-flex flex-wrap">
-                      <div className="mr-5 mb-2">
-                        <div className="text-nowrap text-uppercase text-gray-4">
-                          <div className="air__utils__donut air__utils__donut" style={{ borderColor: '#008ffb' }} />
-                          ชาย
-                        </div>
-                        <div className="font-weight-bold font-size-18 text-dark">{pyramid01.male.toLocaleString()}</div>
-                      </div>
-                      <div className="mr-5 mb-2">
-                        <div className="text-nowrap text-uppercase text-gray-4">
-                          <div className="air__utils__donut air__utils__donut--danger" />
-                          หญิง
-                        </div>
-                        <div className="font-weight-bold font-size-18 text-dark">{pyramid01.female.toLocaleString()}</div>
-                      </div>
-                      {/* {(pyramid01.total !== 0) && ( */}
-                      <div className="mr-5 mb-2">
-                        <div className="text-nowrap text-uppercase text-gray-4">
-                          <div className="air__utils__donut air__utils__donut--success" />
-                          ประชากรทั้งหมด
-                        </div>
-                        <div className="font-weight-bold font-size-18 text-dark">{pyramid01.total.toLocaleString()}</div>
-                      </div>
-                      {/* ) */}
-                      {/* } */}
-                      <div className="mr-5 mb-2">
-                        <div className="text-nowrap text-uppercase text-gray-4">
-                          <div className="air__utils__donut air__utils__donut" style={{ borderColor: '#ffff99' }} />
-                          รายงานเมื่อ
-                        </div>
-                        <div className="font-weight-bold font-size-18 text-dark">{date.format('DD MMMM YYYY HH:mm:ss')}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <br />
-              <div className="row">
-                <div className="col-xl-6 col-lg-6">
-                  <div className="card">
-                    <div className="card-body">
-                      <HighchartsReact highcharts={Highcharts} options={pieChartchronics} style={{ width: "100%", height: "400px" }} />
-                      <Collapse onChange={callback}>
-                        <Panel header="จำนวนผู้ป่วยโรคเรื้อรัง (กดดูรายละเอียด)" key="1">
-                          <Table dataSource={chronicpiechart} columns={columns} bordered />
-                        </Panel>
-                      </Collapse>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-xl-5 col-lg-5">
-                  <div className="card">
-                    <div className="card-body">
-                      <HighchartsReact highcharts={Highcharts} options={pieChartelderly} style={{ width: "100%", height: "400px" }} />
-                      <div className="d-flex flex-wrap">
-                        <div className="mr-4 mb-2">
-                          <div className="text-nowrap text-uppercase text-gray-4">
-                            <div className="air__utils__donut air__utils__donut" style={{ borderColor: 'rgb(144, 237, 125)' }} />
-                            ติดสังคม
-                          </div>
-                          <div className="font-weight-bold font-size-18 text-dark">{user.OK.toLocaleString()}</div>
-                        </div>
-                        <div className="mr-4 mb-2">
-                          <div className="text-nowrap text-uppercase text-gray-4">
-                            <div className="air__utils__donut air__utils__donut" style={{ borderColor: 'rgb(247, 163, 92)' }} />
-                            ติดบ้าน
-                          </div>
-                          <div className="font-weight-bold font-size-18 text-dark">{user.MID.toLocaleString()}</div>
-                        </div>
-                        <div className="mr-4 mb-2">
-                          <div className="text-nowrap text-uppercase text-gray-4">
-                            <div className="air__utils__donut air__utils__donut" style={{ borderColor: '#FF4560' }} />
-                            ติดเตียง
-                          </div>
-                          <div className="font-weight-bold font-size-18 text-dark">{user.VERYHI.toLocaleString()}</div>
-                        </div>
-                        <div className="mr-4 mb-2">
-                          <div className="text-nowrap text-uppercase text-gray-4">
-                            <div className="air__utils__donut air__utils__donut" style={{ borderColor: '#333333' }} />
-                            ไม่ระบุ
-                          </div>
-                          <div className="font-weight-bold font-size-18 text-dark">{user.UNKNOWN.toLocaleString()}</div>
-                        </div>
-                        {/* <div className="mr-4 mb-2">
-                          <div className="text-nowrap text-uppercase text-gray-4">
-                            <div className="air__utils__donut air__utils__donut--success" />
-                            จำนวนทั้งหมด
-                          </div>
-                          <div className="font-weight-bold font-size-18 text-dark">{user.total.toLocaleString()}</div>
-                        </div> */}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        }
-      }
+    }
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } if (!isLoaded) {
+      return <div>Loading...</div>;
     }
     return (
       <div>
         {isLoaded}
-        <Helmet title="Dashboard: Analytics" />
+        <Helmet title="Family Folder Collector" />
+        <div>
+          <Complete />&nbsp; &nbsp; &nbsp;
+          <Button type="button" onClick={refreshPage}> <span>หน่วยงานทั้งหมด</span> </Button>
+        </div>
+        <br />
+        <p style={{ color: '#ff8080' }}>*** รายงานข้อมูลชุมชน จะปรับปรุงทุกๆ 6 ชั่วโมง ***</p>
+        {/* <Chart4 length={oo} /> */}
+        {/* <br /> */}
+        <div className="row">
+          <div className="col-xl-12">
+            <div className="card">
+              <div className="card-body">
+                <Chart1 submit={submit} pyramid01={pyramid01} namehospital={hospital} length={oo} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-xl-4 col-lg-6">
+            <div className="card">
+              <div className="card-body">
+                <General2 length={oo} />
+              </div>
+            </div>
+          </div>
+          <div className="col-xl-4 col-lg-6">
+            <div className="card">
+              <div className="card-body">
+                <General3 pyramid60up={pyramid60up} user={user} isLoaded={isLoaded} error={error} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-xl-12">
+            <div className="card">
+              <div className="card-body">
+                <Tabs defaultActiveKey="1" className="air-tabs-bold">
+                  <TabPane tab="จำนวนผู้ป่วยโรคเรื้อรังแยกตามกลุ่มโรค" key="1">
+                    <Chart4 namehospital={hospital} chronicdilldown={chronicdilldown} submit={submit} />
+                  </TabPane>
+                  <TabPane tab="จำนวนผู้ป่วยโรคเรื้อรังแยกตามรายโรค" key="2">
+                    <Chart3 namehospital={hospital} chronic={chronic} submit={submit} />
+                  </TabPane>
+                </Tabs>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          {/* <div className="col-xl-6">
+            <div className="card">
+              <div className="card-body">
+                <Chart3 submit={submit} chronic={chronic} namehospital={hospital} />
+              </div>
+            </div>
+          </div> */}
+          <div className="col-xl-6">
+            <div className="card">
+              <div className="card-body">
+                <Chart2 submit={submit} user={user} namehospital={hospital} />
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* <div className="row">
+          <div className="col-xl-6">
+            <div className="card">
+              <div className="card-body">
+                <Chart5 />
+              </div>
+            </div>
+          </div>
+        </div> */}
       </div>
     )
   }

@@ -11,9 +11,9 @@ export default async function getMenuData() {
       // count: 6,
       //  [
         {
-          title: 'หน้าแรก',
+          title: 'Home',
           key: 'dashboardAnalytics',
-          url: '/dashboard/analytics',
+          url: 'https://www.ffc.in.th/',
         },
         {
           title: 'แผนที่สุขภาพชุมชน',
